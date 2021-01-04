@@ -76,11 +76,6 @@ def _account_summary_request_id(m: IbApiMessage) -> int:
 
 
 def _unpack_account_summary(m: IbApiMessage) -> AccountSummaryData:
-    if not _is_account_summary(m):
-        raise TypeError(
-            'Trying to unpack a message as account summary, but message is of type: {}'
-            .format(m.type.name))
-
     _, account, tag, value, currency = m.payload
 
     if tag not in _ValidAccountSummaryTags:

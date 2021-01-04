@@ -10,6 +10,7 @@ py_library(
     deps = [
         ":message",
         "//ibrx/mess/messages:account_summary",
+        "//ibrx/mess/messages:position",
         requirement("ibapi"),
         requirement("rx"),
     ],

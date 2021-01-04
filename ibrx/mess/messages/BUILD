@@ -25,3 +25,26 @@ py_test(
         requirement("rx"),
     ],
 )
+
+py_library(
+    name = "position",
+    srcs = ["position.py"],
+    srcs_version = "PY3",
+    deps = [
+        "//ibrx/mess:message",
+        requirement("ibapi"),
+        requirement("rx"),
+    ],
+)
+
+py_test(
+    name = "position_test",
+    srcs = ["position_test.py"],
+    srcs_version = "PY3",
+    deps = [
+        ":position",
+        requirement("ibapi"),
+        requirement("pyhamcrest"),
+        requirement("rx"),
+    ],
+)

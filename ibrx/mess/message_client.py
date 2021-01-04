@@ -8,6 +8,7 @@ from rx import operators as ops
 
 from ibrx.mess.message import IbApiMessageType
 from ibrx.mess.messages import account_summary
+from ibrx.mess.messages import position
 
 
 class IbApiMessageClient:
@@ -27,4 +28,11 @@ class IbApiMessageClient:
             stack.callback(
                 lambda: self._eclient.cancelAccountSummary(request_id))
             obs = account_summary.collect(self._messages, request_id)
+            return obs.run()
+
+    def get_positions(self) -> position.Position:
+        self._eclient.reqPositions()
+        with ExitStack() as stack:
+            stack.callback(self._eclient.cancelPositions)
+            obs = position.collect(self._messages)
             return obs.run()

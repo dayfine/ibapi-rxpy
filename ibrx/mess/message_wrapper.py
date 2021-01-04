@@ -26,3 +26,11 @@ class IbApiMessageWrapper(wrapper.EWrapper):
     def accountSummaryEnd(self, *args):
         super().accountSummaryEnd(*args)
         self._publish_message(IbApiMessageType.ACCOUNT_SUMMARY_END, args)
+
+    def position(self, *args):
+        super().position(*args)
+        self._publish_message(IbApiMessageType.POSITION, args)
+
+    def positionEnd(self, *args):
+        super().positionEnd(*args)
+        self._publish_message(IbApiMessageType.POSITION_END, args)
