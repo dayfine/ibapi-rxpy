@@ -21,9 +21,9 @@ class AccountSummary(object):
     class Value(object):
         tag: AccountSummaryTag
         value: Union[float, str]
-        currency: str
+        currency: Optional[str]
 
-    account: str = None
+    account: Optional[str] = None
     values: List[Value] = dataclasses.field(default_factory=list)
 
 
@@ -32,8 +32,8 @@ def collect(messages: Observable[IbApiMessage],
     return messages.pipe(
         _.filter(
             lambda m: _is_account_summary(m) or _is_account_summary_end(m)),
-        _.take_while(lambda m: not _is_account_summary_end(m)),
         _.filter(lambda m: _account_summary_request_id(m) == request_id),
+        _.take_while(lambda m: not _is_account_summary_end(m)),
         _.map(_unpack_account_summary),
         _.reduce(lambda summary, data: _add_data_to_summary(data, summary),
                  AccountSummary()))
@@ -52,7 +52,7 @@ class AccountSummaryData(object):
     account: str
     tag: AccountSummaryTag
     value: Union[float, str]
-    currency: str
+    currency: Optional[str]
 
 
 def _add_data_to_summary(data: AccountSummaryData,
@@ -76,11 +76,6 @@ def _account_summary_request_id(m: IbApiMessage) -> int:
 
 
 def _unpack_account_summary(m: IbApiMessage) -> AccountSummaryData:
-    if not _is_account_summary(m):
-        raise TypeError(
-            'Trying to unpack a message as account summary, but message is of type: {}'
-            .format(m.type.name))
-
     _, account, tag, value, currency = m.payload
 
     if tag not in _ValidAccountSummaryTags:

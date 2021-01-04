@@ -6,7 +6,8 @@ _IB_GATEWAY_SIMULATED_PORT = 4002
 
 def main():
     ibapi_client = client.IbApiClient('', _IB_GATEWAY_SIMULATED_PORT, 123)
-    print(ibapi_client.message_client.get_account_summary())
+    print('Account Summary: ', ibapi_client.message_client.get_account_summary())
+    print('Positions: ', ibapi_client.message_client.get_positions())
 
 
 if __name__ == '__main__':
