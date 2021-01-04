@@ -9,6 +9,7 @@ py_library(
     srcs_version = "PY3",
     deps = [
         ":message",
+        "//ibrx/mess/messages:account_summary",
         requirement("ibapi"),
         requirement("rx"),
     ],

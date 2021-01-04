@@ -5,7 +5,7 @@ import uuid
 from ibapi import client, wrapper
 from rx.subject import ReplaySubject
 
-from xlab.trading.ibapi.mess import message_client, message_wrapper
+from ibrx.mess import message_client, message_wrapper
 
 
 class IbApiClient(object):
