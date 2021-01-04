@@ -29,6 +29,7 @@ py_library(
     deps = [
         ":message",
         requirement("ibapi"),
+        requirement("overrides"),
         requirement("rx"),
     ],
 )
