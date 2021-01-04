@@ -15,7 +15,7 @@ class Position(object):
     average_cost: float
 
 
-def collect(messages: Observable[IbApiMessage]) -> Observable[Position]:
+def collect(messages: Observable[IbApiMessage]) -> Observable[List[Position]]:
     return messages.pipe(
         _.filter(lambda m: _is_position(m) or _is_position_end(m)),
         _.take_while(lambda m: not _is_position_end(m)),

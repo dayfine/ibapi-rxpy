@@ -21,9 +21,9 @@ class AccountSummary(object):
     class Value(object):
         tag: AccountSummaryTag
         value: Union[float, str]
-        currency: str
+        currency: Optional[str]
 
-    account: str = None
+    account: Optional[str] = None
     values: List[Value] = dataclasses.field(default_factory=list)
 
 
@@ -52,7 +52,7 @@ class AccountSummaryData(object):
     account: str
     tag: AccountSummaryTag
     value: Union[float, str]
-    currency: str
+    currency: Optional[str]
 
 
 def _add_data_to_summary(data: AccountSummaryData,
