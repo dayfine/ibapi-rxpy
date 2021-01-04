@@ -1,5 +1,5 @@
 import dataclasses
-from typing import List, NewType, Optional, Set
+from typing import List, NewType, Optional, Set, Union
 
 from ibapi import account_summary_tags
 from rx.core.typing import Observable
@@ -20,15 +20,15 @@ class AccountSummary(object):
     @dataclasses.dataclass
     class Value(object):
         tag: AccountSummaryTag
-        value: float
+        value: Union[float, str]
         currency: str
 
     account: str = None
     values: List[Value] = dataclasses.field(default_factory=list)
 
 
-def collect_account_summary(messages: Observable[IbApiMessage],
-                            request_id: int) -> Observable[AccountSummary]:
+def collect(messages: Observable[IbApiMessage],
+            request_id: int) -> Observable[AccountSummary]:
     return messages.pipe(
         _.filter(
             lambda m: _is_account_summary(m) or _is_account_summary_end(m)),
@@ -51,7 +51,7 @@ def _is_account_summary_end(m: IbApiMessage) -> bool:
 class AccountSummaryData(object):
     account: str
     tag: AccountSummaryTag
-    value: float
+    value: Union[float, str]
     currency: str
 
 
@@ -82,9 +82,17 @@ def _unpack_account_summary(m: IbApiMessage) -> AccountSummaryData:
             .format(m.type.name))
 
     _, account, tag, value, currency = m.payload
+
     if tag not in _ValidAccountSummaryTags:
         raise ValueError('Invalid account summary tag: {}'.format(tag))
+
+    # Value might be a float.
+    try:
+        value = float(value)
+    except ValueError:
+        pass
+
     return AccountSummaryData(account=account,
                               tag=tag,
-                              value=float(value),
-                              currency=currency)
+                              value=value,
+                              currency=currency or None)
