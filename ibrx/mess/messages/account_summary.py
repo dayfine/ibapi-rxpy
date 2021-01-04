@@ -24,7 +24,7 @@ class AccountSummary(object):
         currency: str
 
     account: str = None
-    values: List[Value] = None
+    values: List[Value] = dataclasses.field(default_factory=list)
 
 
 def collect_account_summary(messages: Observable[IbApiMessage],
@@ -57,7 +57,7 @@ class AccountSummaryData(object):
 
 def _add_data_to_summary(data: AccountSummaryData,
                          summary: AccountSummary) -> AccountSummary:
-    res = AccountSummary(**dataclasses.asdict(summary))
+    res = dataclasses.replace(summary)  # Make a copy
     if not res.account:
         res.account = data.account
     if res.account != data.account:
@@ -81,7 +81,7 @@ def _unpack_account_summary(m: IbApiMessage) -> AccountSummaryData:
             'Trying to unpack a message as account summary, but message is of type: {}'
             .format(m.type.name))
 
-    account, tag, value, currency = m.payload
+    _, account, tag, value, currency = m.payload
     if tag not in _ValidAccountSummaryTags:
         raise ValueError('Invalid account summary tag: {}'.format(tag))
     return AccountSummaryData(account=account,

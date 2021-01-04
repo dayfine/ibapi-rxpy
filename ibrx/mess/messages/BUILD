@@ -20,6 +20,8 @@ py_test(
     srcs_version = "PY3",
     deps = [
         ":account_summary",
+        requirement("ibapi"),
+        requirement("pyhamcrest"),
         requirement("rx"),
     ],
 )
