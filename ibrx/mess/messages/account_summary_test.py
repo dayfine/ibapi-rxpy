@@ -24,6 +24,19 @@ class AccountSummaryTest(unittest.TestCase):
                               'USD')),
     ]
 
+    def _expected_account_summary(self):
+        """AccountSummary built from self._MESSAGES"""
+        return _AccountSummary(
+            account='DU12345',
+            values=[
+                _AccountSummaryValue(tag=_Tags.TotalCashValue,
+                                     value=1001872.67,
+                                     currency='USD'),
+                _AccountSummaryValue(tag=_Tags.NetLiquidation,
+                                     value=1001872.67,
+                                     currency='USD'),
+            ])
+
     def test_empty_observable(self):
         obs = account_summary.collect(empty(), 0)
 
@@ -32,23 +45,12 @@ class AccountSummaryTest(unittest.TestCase):
     def test_collect_works(self):
         obs = account_summary.collect(from_iterable(self._MESSAGES), 0)
 
-        assert_that(
-            obs.run(),
-            equal_to(
-                _AccountSummary(
-                    account='DU12345',
-                    values=[
-                        _AccountSummaryValue(tag=_Tags.TotalCashValue,
-                                             value=1001872.67,
-                                             currency='USD'),
-                        _AccountSummaryValue(tag=_Tags.NetLiquidation,
-                                             value=1001872.67,
-                                             currency='USD'),
-                    ])))
+        assert_that(obs.run(), equal_to(self._expected_account_summary()))
 
     def test_completes_on_account_summary_end(self):
         messages = self._MESSAGES[:1] + [
-            IbApiMessage(type=IbApiMessageType.ACCOUNT_SUMMARY_END, payload=(0))
+            IbApiMessage(type=IbApiMessageType.ACCOUNT_SUMMARY_END,
+                         payload=(0,))
         ] + self._MESSAGES[1:]
 
         obs = account_summary.collect(from_iterable(messages), 0)
@@ -64,27 +66,26 @@ class AccountSummaryTest(unittest.TestCase):
                                         currency='USD'),
                                 ])))
 
-    def test_ignores_irelevant_messages(self):
+    def test_ignores_messages_of_different_request_id(self):
+        messages = self._MESSAGES[:1] + [
+            IbApiMessage(type=IbApiMessageType.ACCOUNT_SUMMARY_END,
+                         payload=(1,))
+        ] + self._MESSAGES[1:]
+
+        obs = account_summary.collect(from_iterable(messages), 0)
+
+        assert_that(obs.run(), equal_to(self._expected_account_summary()))
+
+    def test_ignores_irelevant_messages_types(self):
         messages = self._MESSAGES + [
             IbApiMessage(type=IbApiMessageType.ERROR, payload=()),
-            IbApiMessage(type=IbApiMessageType.ACCOUNT_SUMMARY_END, payload=(0))
+            IbApiMessage(type=IbApiMessageType.ACCOUNT_SUMMARY_END,
+                         payload=(0,))
         ]
 
         obs = account_summary.collect(from_iterable(messages), 0)
 
-        assert_that(
-            obs.run(),
-            equal_to(
-                _AccountSummary(
-                    account='DU12345',
-                    values=[
-                        _AccountSummaryValue(tag=_Tags.TotalCashValue,
-                                             value=1001872.67,
-                                             currency='USD'),
-                        _AccountSummaryValue(tag=_Tags.NetLiquidation,
-                                             value=1001872.67,
-                                             currency='USD'),
-                    ])))
+        assert_that(obs.run(), equal_to(self._expected_account_summary()))
 
     def test_does_not_complete(self):
 

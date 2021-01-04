@@ -32,8 +32,8 @@ def collect(messages: Observable[IbApiMessage],
     return messages.pipe(
         _.filter(
             lambda m: _is_account_summary(m) or _is_account_summary_end(m)),
-        _.take_while(lambda m: not _is_account_summary_end(m)),
         _.filter(lambda m: _account_summary_request_id(m) == request_id),
+        _.take_while(lambda m: not _is_account_summary_end(m)),
         _.map(_unpack_account_summary),
         _.reduce(lambda summary, data: _add_data_to_summary(data, summary),
                  AccountSummary()))
