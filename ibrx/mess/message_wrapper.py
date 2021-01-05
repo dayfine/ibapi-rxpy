@@ -17,11 +17,6 @@ class IbApiMessageWrapper(wrapper.EWrapper):
 
     # Start of EWrapper methods to be overriden.
     @overrides
-    def error(self, *args):
-        super().error(*args)
-        self._publish_message(IbApiMessageType.ERROR, args)
-
-    @overrides
     def accountSummary(self, *args):
         super().accountSummary(*args)
         self._publish_message(IbApiMessageType.ACCOUNT_SUMMARY, args)
@@ -30,6 +25,26 @@ class IbApiMessageWrapper(wrapper.EWrapper):
     def accountSummaryEnd(self, *args):
         super().accountSummaryEnd(*args)
         self._publish_message(IbApiMessageType.ACCOUNT_SUMMARY_END, args)
+
+    @overrides
+    def error(self, *args):
+        super().error(*args)
+        self._publish_message(IbApiMessageType.ERROR, args)
+
+    @overrides
+    def nextValidId(self, *args):
+        super().nextValidId(*args)
+        self._publish_message(IbApiMessageType.NEXT_VALID_ID, args)
+
+    @overrides
+    def openOrder(self, *args):
+        super().openOrder(*args)
+        self._publish_message(IbApiMessageType.OPEN_ORDER, args)
+
+    @overrides
+    def openOrderEnd(self, *args):
+        super().openOrderEnd(*args)
+        self._publish_message(IbApiMessageType.OPEN_ORDER_END, args)
 
     @overrides
     def position(self, *args):

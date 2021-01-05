@@ -15,8 +15,11 @@ py_library(
     srcs = ["client.py"],
     srcs_version = "PY3",
     deps = [
-        "//ibrx/mess:message_client",
+        "//ibrx/mess:message",
         "//ibrx/mess:message_wrapper",
+        "//ibrx/mess/messages:account_summary",
+        "//ibrx/mess/messages:open_orders",
+        "//ibrx/mess/messages:position",
         requirement("ibapi"),
         requirement("rx"),
     ],
