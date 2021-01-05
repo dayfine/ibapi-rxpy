@@ -4,9 +4,12 @@ from typing import Any
 
 
 class IbApiMessageType(enum.Enum):
-    ERROR = enum.auto()
     ACCOUNT_SUMMARY = enum.auto()
     ACCOUNT_SUMMARY_END = enum.auto()
+    ERROR = enum.auto()
+    NEXT_VALID_ID = enum.auto()
+    OPEN_ORDER = enum.auto()
+    OPEN_ORDER_END = enum.auto()
     POSITION = enum.auto()
     POSITION_END = enum.auto()
 
@@ -14,4 +17,4 @@ class IbApiMessageType(enum.Enum):
 @dataclasses.dataclass
 class IbApiMessage(object):
     type: IbApiMessageType
-    payload: Any
+    payload: Any = None

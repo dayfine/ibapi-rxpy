@@ -27,6 +27,30 @@ py_test(
 )
 
 py_library(
+    name = "open_orders",
+    srcs = ["open_orders.py"],
+    srcs_version = "PY3",
+    deps = [
+        "//ibrx/mess:message",
+        requirement("ibapi"),
+        requirement("rx"),
+    ],
+)
+
+py_test(
+    name = "open_orders_test",
+    srcs = ["open_orders_test.py"],
+    srcs_version = "PY3",
+    deps = [
+        ":open_orders",
+        requirement("ibapi"),
+        requirement("pyhamcrest"),
+        requirement("rx"),
+    ],
+)
+
+
+py_library(
     name = "position",
     srcs = ["position.py"],
     srcs_version = "PY3",
