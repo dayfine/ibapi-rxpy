@@ -21,7 +21,7 @@ def collect(messages: Observable[IbApiMessage]) -> Observable[List[Position]]:
         _.filter(lambda m: _is_position(m) or _is_position_end(m)),
         _.take_while(lambda m: not _is_position_end(m)),
         _.map(_unpack_position),
-        _.reduce(lambda positions, position: positions.extend(position), []),
+        _.reduce(lambda positions, position: [*positions, position], []),
     )
 
 
