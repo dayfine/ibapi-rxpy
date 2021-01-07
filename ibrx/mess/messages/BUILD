@@ -43,12 +43,12 @@ py_test(
     srcs_version = "PY3",
     deps = [
         ":open_orders",
+        ":test_utils",
         requirement("ibapi"),
         requirement("pyhamcrest"),
         requirement("rx"),
     ],
 )
-
 
 py_library(
     name = "position",
@@ -67,8 +67,19 @@ py_test(
     srcs_version = "PY3",
     deps = [
         ":position",
+        ":test_utils",
         requirement("ibapi"),
         requirement("pyhamcrest"),
         requirement("rx"),
+    ],
+)
+
+py_library(
+    name = "test_utils",
+    testonly = True,
+    srcs = ["test_utils.py"],
+    srcs_version = "PY3",
+    deps = [
+        requirement("ibapi"),
     ],
 )
