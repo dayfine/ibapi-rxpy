@@ -11,6 +11,19 @@ package_group(
 )
 
 py_library(
+    name = "ibrx",
+    srcs = ["__init__.py"],
+    srcs_version = "PY3",
+    deps = [
+        ":client",
+        "//ibrx/mess:message",
+        "//ibrx/mess:message_wrapper",
+        "//ibrx/mess/messages",
+        "//ibrx/types:historical_data",
+    ],
+)
+
+py_library(
     name = "client",
     srcs = ["client.py"],
     srcs_version = "PY3",
@@ -20,6 +33,7 @@ py_library(
         "//ibrx/mess/messages:account_summary",
         "//ibrx/mess/messages:open_orders",
         "//ibrx/mess/messages:position",
+        "//ibrx/types:historical_data",
         requirement("ibapi"),
         requirement("rx"),
     ],
@@ -30,6 +44,6 @@ py_binary(
     srcs = ["test_app.py"],
     srcs_version = "PY3",
     deps = [
-        ":client",
+        ":ibrx",
     ],
 )

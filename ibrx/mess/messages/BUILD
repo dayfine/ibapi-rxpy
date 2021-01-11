@@ -4,6 +4,18 @@ load("@py_deps//:requirements.bzl", "requirement")
 package(default_visibility = ["//ibrx:internal"])
 
 py_library(
+    name = "messages",
+    srcs = ["__init__.py"],
+    srcs_version = "PY3",
+    deps = [
+        ":account_summary",
+        ":historical_data",
+        ":open_orders",
+        ":position",
+    ],
+)
+
+py_library(
     name = "account_summary",
     srcs = ["account_summary.py"],
     srcs_version = "PY3",
@@ -22,6 +34,17 @@ py_test(
         ":account_summary",
         requirement("ibapi"),
         requirement("pyhamcrest"),
+        requirement("rx"),
+    ],
+)
+
+py_library(
+    name = "historical_data",
+    srcs = ["historical_data.py"],
+    srcs_version = "PY3",
+    deps = [
+        "//ibrx/mess:message",
+        requirement("ibapi"),
         requirement("rx"),
     ],
 )

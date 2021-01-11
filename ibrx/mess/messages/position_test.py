@@ -1,8 +1,7 @@
 import unittest
 
 from hamcrest import anything, all_of, assert_that, contains_exactly, empty, equal_to, has_property
-from ibapi import contract
-from rx import create, empty as empty_obs, from_iterable
+from rx import empty as empty_obs, from_iterable
 
 from ibrx.mess.message import IbApiMessageType, IbApiMessage
 from ibrx.mess.messages import position, test_utils
