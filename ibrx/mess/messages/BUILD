@@ -44,7 +44,21 @@ py_library(
     srcs_version = "PY3",
     deps = [
         "//ibrx/mess:message",
+        "//ibrx/types:historical_data",
         requirement("ibapi"),
+        requirement("rx"),
+    ],
+)
+
+py_test(
+    name = "historical_data_test",
+    srcs = ["historical_data_test.py"],
+    srcs_version = "PY3",
+    deps = [
+        ":historical_data",
+        "//ibrx/types:historical_data",
+        requirement("ibapi"),
+        requirement("pyhamcrest"),
         requirement("rx"),
     ],
 )

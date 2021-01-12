@@ -3,7 +3,7 @@ import unittest
 
 from hamcrest import assert_that, calling, equal_to, is_, raises
 
-from ibrx.types.historical_data import BarSize, Duration, HistoricalDataOptions
+from ibrx.types.historical_data import BarSize, Duration, HistoricalDataOptions, HistoricalDataType
 
 
 class HistoricalDataTypeTest(unittest.TestCase):
@@ -39,7 +39,7 @@ class HistoricalDataTypeTest(unittest.TestCase):
             end_datetime=datetime.datetime(2020, 2, 29),
             duration=Duration(3, Duration.Unit.MONTH),
             bar_size=BarSize(20, BarSize.Unit.HOUR),
-            type=HistoricalDataOptions.Type.ADJUSTED_LAST)
+            type=HistoricalDataType.ADJUSTED_LAST)
         assert_that(
             calling(HistoricalDataOptions.validate).with_args(options),
             raises(ValueError))

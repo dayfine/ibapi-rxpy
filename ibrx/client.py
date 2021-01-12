@@ -89,5 +89,6 @@ class IbApiClient(object):
             formatDate=data_options.format_time.value,
             keepUpToDate=False,
             chartOptions=None)
-        obs = historical_data.collect(self._messages)
+        obs = historical_data.collect(self._messages, request_id,
+                                      data_options.type)
         return obs.run()

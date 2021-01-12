@@ -37,6 +37,11 @@ class IbApiMessageWrapper(wrapper.EWrapper):
         self._publish_message(IbApiMessageType.HISTORICAL_DATA, args)
 
     @overrides
+    def historicalDataEnd(self, *args):
+        super().historicalDataEnd(*args)
+        self._publish_message(IbApiMessageType.HISTORICAL_DATA_END, args)
+
+    @overrides
     def nextValidId(self, *args):
         super().nextValidId(*args)
         self._publish_message(IbApiMessageType.NEXT_VALID_ID, args)

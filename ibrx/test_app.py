@@ -28,11 +28,11 @@ def main():
         data_options=historical_data.HistoricalDataOptions(
             end_datetime=None,
             duration=historical_data.Duration(
-                1, historical_data.Duration.Unit.MONTH),
-            bar_size=historical_data.BAR_SIZE_8_HOUR,
-            type=historical_data.HistoricalDataOptions.Type.MIDPOINT))
+                2, historical_data.Duration.Unit.WEEK),
+            bar_size=historical_data.BAR_SIZE_2_HOUR,
+            type=historical_data.HistoricalDataOptions.Type.TRADES))
 
-    print('Historical price ', hd)
+    print('\nHistorical data ', hd)
 
 
 if __name__ == '__main__':

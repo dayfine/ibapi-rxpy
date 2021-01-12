@@ -3,6 +3,42 @@ import enum
 import datetime
 from typing import Optional
 
+# https://interactivebrokers.github.io/tws-api/historical_bars.html#hd_what_to_show
+class HistoricalDataType(enum.Enum):
+    TRADES = enum.auto()
+    MIDPOINT = enum.auto()
+    BID = enum.auto()
+    ASK = enum.auto()
+    BID_ASK = enum.auto()
+    ADJUSTED_LAST = enum.auto()
+    HISTORICAL_VOLATILITY = enum.auto()
+    OPTION_IMPLIED_VOLATILITY = enum.auto()
+    REBATE_RATE = enum.auto()
+    FEE_RATE = enum.auto()
+    YIELD_BID = enum.auto()
+    YIELD_ASK = enum.auto()
+    YIELD_BID_ASK = enum.auto()
+    YIELD_LAST = enum.auto()
+
+
+@dataclasses.dataclass(frozen=True)
+class BarData:
+
+    # Data only available for TRADES type of bars
+    @dataclasses.dataclass(frozen=True)
+    class TradeData:
+        volume: int
+        average_price: float
+        bar_count: int
+
+    type: HistoricalDataType
+    time: datetime.datetime
+    open: float
+    high: float
+    low: float
+    close: float
+    trade_data: Optional[TradeData] = None
+
 
 @dataclasses.dataclass(frozen=True)
 class Duration:
@@ -114,23 +150,6 @@ _VALID_BAR_SIZES = set([
 @dataclasses.dataclass
 class HistoricalDataOptions(object):
 
-    # https://interactivebrokers.github.io/tws-api/historical_bars.html#hd_what_to_show
-    class Type(enum.Enum):
-        TRADES = enum.auto()
-        MIDPOINT = enum.auto()
-        BID = enum.auto()
-        ASK = enum.auto()
-        BID_ASK = enum.auto()
-        ADJUSTED_LAST = enum.auto()
-        HISTORICAL_VOLATILITY = enum.auto()
-        OPTION_IMPLIED_VOLATILITY = enum.auto()
-        REBATE_RATE = enum.auto()
-        FEE_RATE = enum.auto()
-        YIELD_BID = enum.auto()
-        YIELD_ASK = enum.auto()
-        YIELD_BID_ASK = enum.auto()
-        YIELD_LAST = enum.auto()
-
     class FormatTimeOption(enum.Enum):
         STRING = 1
         UNIX_SECONDS = 2
@@ -138,7 +157,7 @@ class HistoricalDataOptions(object):
     end_datetime: Optional[datetime.datetime]
     duration: Duration
     bar_size: BarSize
-    type: Type
+    type: HistoricalDataType
     use_rth: bool = True
     stream: bool = False
     format_time: FormatTimeOption = FormatTimeOption.UNIX_SECONDS
