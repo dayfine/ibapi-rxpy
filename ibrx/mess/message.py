@@ -7,6 +7,8 @@ class IbApiMessageType(enum.Enum):
     ACCOUNT_SUMMARY = enum.auto()
     ACCOUNT_SUMMARY_END = enum.auto()
     ERROR = enum.auto()
+    HISTORICAL_DATA = enum.auto()
+    HISTORICAL_DATA_END = enum.auto()
     NEXT_VALID_ID = enum.auto()
     OPEN_ORDER = enum.auto()
     OPEN_ORDER_END = enum.auto()

@@ -12,8 +12,10 @@ from rx.subject import ReplaySubject
 from ibrx.mess import message_wrapper
 from ibrx.mess.message import IbApiMessageType
 from ibrx.mess.messages import account_summary
+from ibrx.mess.messages import historical_data
 from ibrx.mess.messages import open_orders
 from ibrx.mess.messages import position
+from ibrx.types.historical_data import HistoricalDataOptions
 
 
 class IbApiClient(object):
@@ -64,3 +66,29 @@ class IbApiClient(object):
 
     def cancel_order(self, order_id: int):
         self._eclient.cancelOrder(order_id)
+
+    def get_historical_data(self, contract: contract.Contract,
+                            data_options: HistoricalDataOptions):
+        HistoricalDataOptions.validate(data_options)
+        if data_options.stream:
+            raise ValueError(
+                'get_historical_data should not be called with |options.stream| = True'
+            )
+
+        request_id = self._next_valid_id()
+        end_datetime_str = data_options.end_datetime.strftime(
+            '%Y%m%d %H:%M%S') if data_options.end_datetime else ''
+        self._eclient.reqHistoricalData(
+            request_id,
+            contract,
+            endDateTime=end_datetime_str,
+            durationStr=data_options.duration.as_string(),
+            barSizeSetting=data_options.bar_size.as_string(),
+            whatToShow=data_options.type.name,
+            useRTH=data_options.use_rth,
+            formatDate=data_options.format_time.value,
+            keepUpToDate=False,
+            chartOptions=None)
+        obs = historical_data.collect(self._messages, request_id,
+                                      data_options.type)
+        return obs.run()
