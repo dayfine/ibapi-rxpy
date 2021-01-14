@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ibrx",
-    version="0.0.1",
+    version="0.0.2",
     author="dayfine",
     author_email="",
     description="IB API using RxPY",
